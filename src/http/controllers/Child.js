@@ -66,7 +66,7 @@ export class ChildController {
             body: {
               type: 'eis',
               data: {
-                title: 'DID registration for ' + id,
+                title: 'DID registration for child ' + id,
                 objectId,
                 address: ownerAddress
               },

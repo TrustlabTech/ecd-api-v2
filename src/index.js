@@ -7,9 +7,10 @@ dotenv.config()
 
 /*  base libs */
 import cors from 'cors'
+import jwt from 'express-jwt'
 import express from 'express'
 import bodyParser from 'body-parser'
-import validator from 'express-validator'
+//import validator from 'express-validator'
 /*  libs/modules */
 import routes from './http/routes'
 import StorageProvider from './http/models'
@@ -24,7 +25,16 @@ const
 
 app.use(cors())
 app.use(bodyParser.json())
-app.use(validator())
+//app.use(validator())
+app.use(jwt({ secret: process.env.JWT_SECRET }).unless({ path: '/staff/login' }))
+
+// customize express-jwt error-handling
+// it replies HTML by default, but we wanna json here
+app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
+  if (err.name === 'UnauthorizedError') {
+    res.status(401).json({ error: err.message })
+  }
+})
 
 const
   v2 = routes(express.Router(), 'v2'),
