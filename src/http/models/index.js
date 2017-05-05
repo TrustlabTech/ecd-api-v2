@@ -19,9 +19,14 @@ const childSchemaOptions = {
 }
 
 const centreSchema = {
-  centreId: Number,
+  id: Number,
   did: String,
   ddo: String,
+  eth: {
+    pubkey: String,
+    privkey: String,
+    address: String,
+  },
   verifiableClaims: Array,
 }
 

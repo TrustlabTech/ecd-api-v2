@@ -3,10 +3,40 @@
 import request from 'request'
 import wrapper from 'identity-service-wrapper'
 
+const getJobRequestOptions = (req) => {
+  const id = req.body.id, // API v1 id of the resource
+        type = req.body.type // resource type (staff | centre)
+  return {
+    method: 'POST',
+    uri: 'http://localhost:3000/job',
+    json: true,
+    body: {
+      type: type === 'centre' ? 'IDENTITY_SERVICE_CENTRES' : 'IDENTITY_SERVICE_STAFF',
+      data: {
+        title: 'DID registration for ' + type + ' ' + id,
+        id,
+      },
+      options: {
+        attempts: 5,
+        priority: 'high',
+      }
+    }
+  }
+}
+
 export class EisController {
   
   static create = (req, res) => {
+    request(getJobRequestOptions(req), (jobserviceError, jobserviceResponse, jobserviceBody) => {
+      if (jobserviceError) {
+        // if we weren't able to create the job, return an error
+        res.status(500).json({ error: 'An error occurred' })
+        console.log(jobserviceError)
+        return
+      }
 
+      res.status(201).json({ eisJobId: jobserviceBody.id })
+    })
   }
 
   static verify = (req, res) => {

@@ -10,8 +10,7 @@ const eis = express.Router()
 
 // create (async through Jobs Service)
 eis.post('/', (req, res) => {
-  res.status(501).json({})
-  //EisController.create(req, res)
+  EisController.create(req, res)
 })
 
 // verify (sync)

@@ -64,11 +64,11 @@ export class ChildController {
             uri: 'http://localhost:3000/job',
             json: true,
             body: {
-              type: 'eis',
+              type: 'IDENTITY_SERVICE_CHILDREN',
               data: {
                 title: 'DID registration for child ' + id,
                 objectId,
-                address: ownerAddress
+                address: ownerAddress,
               },
               options: {
                 attempts: 5,
@@ -77,7 +77,7 @@ export class ChildController {
             }
           }
 
-          request(eisJobReqOptions, async (jobserviceError, jobserviceResponse, jobserviceBody) => {
+          request(eisJobReqOptions, (jobserviceError, jobserviceResponse, jobserviceBody) => {
             if (jobserviceError) {
               // if we weren't able to create the job, return an error
               res.status(500).json({ error: 'An error occurred' })
