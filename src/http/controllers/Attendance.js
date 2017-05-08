@@ -96,7 +96,7 @@ export class AttendanceController {
           claimObject = req.body.claim    
 
     try {
-      const hash = keccak_256(claimObject.claim),
+      const hash = keccak_256.create().update(JSON.stringify(claimObject.claim)).hex(),
             claim = claimObject.claim,
             verifiableClaim = claimObject
 

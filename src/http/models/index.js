@@ -76,7 +76,9 @@ export default class StorageProvider {
   }
 
   getNewVCSchema(hash, claim, verifiableClaim) {
-    return new mongoose.Schema({ hash, claim, verifiableClaim })
+    return {
+      hash, claim, verifiableClaim
+    }
   }
 
   getCentreModel() {
