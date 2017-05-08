@@ -2,6 +2,7 @@
 
 /* base libs */
 import request from 'request'
+import { keccak_256 } from 'js-sha3'
 /*  libs/modules */
 import StorageProvider from '../../'
 /*  utils/constants */
@@ -13,7 +14,7 @@ const attendeeSample = {
     "date": "",
     "attended": false,
 }
-const claimObject = {
+const attendenceObject = {
   "id": "did_ecd_practitioner",
   "deliveredService": {
     "type": "EducationEvent",
@@ -76,7 +77,7 @@ export class AttendanceController {
             message: '',
             data: {
               attendeeSample,
-              claimObject,
+              attendenceObject,
               verifiableClaim,
             },
           })
@@ -90,8 +91,59 @@ export class AttendanceController {
     })
   }
 
-  static createVerifiableClaim = (req, res) => {
-    console.log(req.body)
-    res.status(200).json({ success: true, message: '', data: {} })    
+  static createVerifiableClaim = async (req, res) => {
+    const centreId = req.body.centreId,
+          claimObject = req.body.claim    
+
+    try {
+      const hash = keccak_256(claimObject.claim),
+            claim = claimObject.claim,
+            verifiableClaim = claimObject
+
+      const CentreModel = StorageProvider.getCentreModel(),
+            VCEmbed = StorageProvider.getNewVCSchema(hash, claim, verifiableClaim)
+      
+      // check first the centre exist
+      const query = { id: centreId },
+            update = { id: centreId, $push: { verifiableClaims: VCEmbed } },
+            options = { upsert: true, new: true, setDefaultsOnInsert: true }
+
+      const result = await CentreModel.findOneAndUpdate(query, update, options)
+
+      // create job for did registration
+      const vcJobReqOptions = {
+        method: 'POST',
+        uri: 'http://localhost:3000/job',
+        json: true,
+        body: {
+          type: 'VC_RECORD',
+          data: {
+            title: 'Verifiable Claim record for ' + hash,
+            hash,
+            claim,
+            verifiableClaim,
+          },
+          options: {
+            attempts: 5,
+            priority: 'normal',
+          }
+        }
+      }
+
+      request(vcJobReqOptions, (vcJobError, vcJobResponse, vcJobBody) => {
+        if (vcJobError) {
+          // if we weren't able to create the job, return an error
+          res.status(500).json({ error: 'An error occurred' })
+          console.log(vcJobError)
+          return
+        }
+
+        res.status(201).json({ success: true, message: '', data: {} })
+      })
+            
+    } catch (e) {
+      res.status(500).json({ success: false, message: 'An error occurred', data: {} })
+      console.log(e)
+    }
   }
 }

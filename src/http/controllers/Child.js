@@ -72,7 +72,7 @@ export class ChildController {
               },
               options: {
                 attempts: 5,
-                priority: 'high',
+                priority: 'critical',
               }
             }
           }
