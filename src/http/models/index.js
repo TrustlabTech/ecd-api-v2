@@ -75,13 +75,13 @@ export default class StorageProvider {
     return this.childModel
   }
 
+  getCentreModel() {
+    return this.centreModel
+  }
+
   getNewVCSchema(hash, claim, verifiableClaim) {
     return {
       hash, claim, verifiableClaim
     }
-  }
-
-  getCentreModel() {
-    return this.centreModel
   }
 }

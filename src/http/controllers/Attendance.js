@@ -103,25 +103,24 @@ export class AttendanceController {
       const CentreModel = StorageProvider.getCentreModel(),
             VCEmbed = StorageProvider.getNewVCSchema(hash, claim, verifiableClaim)
       
-      // check first the centre exist
       const query = { id: centreId },
             update = { id: centreId, $push: { verifiableClaims: VCEmbed } },
             options = { upsert: true, new: true, setDefaultsOnInsert: true }
 
       const result = await CentreModel.findOneAndUpdate(query, update, options)
-
+      
       // create job for did registration
       const vcJobReqOptions = {
         method: 'POST',
         uri: 'http://localhost:3000/job',
         json: true,
         body: {
-          type: 'VC_RECORD',
+          type: 'DELIVERY_SERVICE_RECORD',
           data: {
             title: 'Verifiable Claim record for ' + hash,
+            centreId,
             hash,
-            claim,
-            verifiableClaim,
+            verifiableClaim: JSON.stringify(verifiableClaim),
           },
           options: {
             attempts: 5,
