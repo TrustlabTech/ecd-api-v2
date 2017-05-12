@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/TrustlabTech/ecd-api-v2.png?label=ready&title=Ready)](https://waffle.io/TrustlabTech/ecd-api-v2?utm_source=badge)
 # ECD Platform API
 
 ## Endpoints
