@@ -23,6 +23,7 @@ const getJobRequestOptions = (req) => {
       },
       options: {
         attempts: 5,
+        ttl: 1000 * 60 * 2,
         priority: 'critical',
       }
     }

@@ -103,7 +103,7 @@ export class AttendanceController {
       
       const query = { id: centreId },
             update = { id: centreId, $push: { verifiableClaims: VCEmbed } },
-            options = { upsert: true, new: true, setDefaultsOnInsert: true }
+            options = { upsert: true, new: true, setDefaultsOnInsert: false }
 
       const result = await CentreModel.findOneAndUpdate(query, update, options)
       
@@ -121,6 +121,7 @@ export class AttendanceController {
           },
           options: {
             attempts: 5,
+            ttl: 1000 * 60,
             priority: 'normal',
           }
         }

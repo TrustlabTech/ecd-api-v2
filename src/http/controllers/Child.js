@@ -46,12 +46,10 @@ export class ChildController {
                     address: ownerAddress,
                   }
                 })
-          
-          let objectId = ''
+
           try {
             // store child
             const record = await child.save()
-            objectId = record._id
           } catch (e) {
             res.status(500).json(['Could not create child (v2)'])
             console.log(e)
@@ -67,11 +65,12 @@ export class ChildController {
               type: 'IDENTITY_SERVICE_CHILDREN',
               data: {
                 title: 'DID registration for child ' + id,
-                objectId,
+                id,
                 address: ownerAddress,
               },
               options: {
                 attempts: 5,
+                ttl: 1000 * 60 * 2,
                 priority: 'critical',
               }
             }
