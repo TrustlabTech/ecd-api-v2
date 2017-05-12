@@ -4,7 +4,6 @@ import mongoose from 'mongoose'
 
 const VCSchema = new mongoose.Schema({
   hash: String,
-  claim: Object,
   verifiableClaim: Object,
 })
 
@@ -32,6 +31,17 @@ const centreSchema = new mongoose.Schema({
     address: String,
   },
   verifiableClaims: [VCSchema],
+})
+
+const practitionerSchema = new mongoose.Schema({
+  id: Number,
+  did: String,
+  ddo: String,
+  eth: {
+    pubkey: String,
+    privkey: String,
+    address: String,
+  },
 })
 
 export default class StorageProvider {
@@ -62,6 +72,7 @@ export default class StorageProvider {
 
       this.childModel = this.provider.model('Child', childSchema, 'children')
       this.centreModel = this.provider.model('Centre', centreSchema)
+      this.practitionerModel = this.provider.model('Practitioner', practitionerSchema)
     })
 
     return this
@@ -79,9 +90,13 @@ export default class StorageProvider {
     return this.centreModel
   }
 
-  getNewVCSchema(hash, claim, verifiableClaim) {
+  getPractitionerModel() {
+    return this.practitionerModel
+  }
+
+  getNewVCSchema(hash, verifiableClaim) {
     return {
-      hash, claim, verifiableClaim
+      hash, verifiableClaim
     }
   }
 }

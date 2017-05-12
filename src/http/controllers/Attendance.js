@@ -93,15 +93,13 @@ export class AttendanceController {
 
   static createVerifiableClaim = async (req, res) => {
     const centreId = req.body.centreId,
-          claimObject = req.body.claim    
+          bulkClaim = req.body.bulkClaim,
+          singleClaims = req.body.singleClaims
 
     try {
-      const hash = keccak_256.create().update(JSON.stringify(claimObject.claim)).hex(),
-            claim = claimObject.claim,
-            verifiableClaim = claimObject
-
-      const CentreModel = StorageProvider.getCentreModel(),
-            VCEmbed = StorageProvider.getNewVCSchema(hash, claim, verifiableClaim)
+      const hash = keccak_256.create().update(JSON.stringify(bulkClaim.claim)).hex(),
+            CentreModel = StorageProvider.getCentreModel(),
+            VCEmbed = StorageProvider.getNewVCSchema(hash, bulkClaim)
       
       const query = { id: centreId },
             update = { id: centreId, $push: { verifiableClaims: VCEmbed } },
@@ -115,12 +113,11 @@ export class AttendanceController {
         uri: 'http://localhost:3000/job',
         json: true,
         body: {
-          type: 'DELIVERY_SERVICE_RECORD',
+          type: 'DELIVERY_SERVICE_RECORD_LIST',
           data: {
-            title: 'Verifiable Claim record for ' + hash,
+            title: 'Verifiable Claims record list',
             centreId,
-            hash,
-            verifiableClaim: JSON.stringify(verifiableClaim),
+            singleClaims,
           },
           options: {
             attempts: 5,

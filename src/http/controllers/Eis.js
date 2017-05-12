@@ -6,12 +6,17 @@ import wrapper from 'identity-service-wrapper'
 const getJobRequestOptions = (req) => {
   const id = req.body.id, // API v1 id of the resource
         type = req.body.type // resource type (staff | centre)
+
+  const resolvedType = type === 'centre' ? 'IDENTITY_SERVICE_CENTRES' 
+                     : type === 'practitioner' ? 'IDENTITY_SERVICE_PRACTITIONERS'
+                     : type === 'child' ? 'IDENTITY_SERVICE_CHILDREN' : '' // will be a no-op
+
   return {
     method: 'POST',
     uri: 'http://localhost:3000/job',
     json: true,
     body: {
-      type: type === 'centre' ? 'IDENTITY_SERVICE_CENTRES' : 'IDENTITY_SERVICE_STAFF',
+      type: resolvedType,
       data: {
         title: 'DID registration for ' + type + ' ' + id,
         id,

@@ -3,6 +3,7 @@
 /* base libs */
 import request from 'request'
 /*  libs/modules */
+import StorageProvider from '../../'
 /*  utils/constants */
 import { API_V1_BASE, REQUEST_OPTIONS } from '../../constants'
 
@@ -13,9 +14,20 @@ export class StaffController {
     const uri = StaffController.v1StaffEndpoint + '/login',
           options = REQUEST_OPTIONS(req, uri, 'POST', req.body)
           
-    request(options, (error, response, body) => {
+    request(options, async (error, response, body) => {
       if (!error) {
-        res.status(response.statusCode).json(body)
+        try {
+          const centreInfo = await StorageProvider.getCentreModel().findOne({ id: body.user.centre.id }).select('did').exec()
+          const staffInfo = await StorageProvider.getPractitionerModel().findOne({ id: body.user.id }).select('did').exec()
+
+          body.user.did = staffInfo.did
+          body.user.centre.did = centreInfo.did
+          
+          res.status(response.statusCode).json(body)
+        } catch (e) {
+          res.status(500).json({ error: 'An error occurred' })
+          console.log(e)
+        }
       } else {
         res.status(500).json({ error: 'An error occurred' })
         console.log(error)
