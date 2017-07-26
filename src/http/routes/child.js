@@ -17,6 +17,11 @@ child.post('/', (req, res) => {
   ChildController.create(req, res)
 })
 
+child.patch('/', (req, res) => {
+  ChildController.update(req, res)
+})
+
+
 /**
  * ##############################################
  * # AUTH
