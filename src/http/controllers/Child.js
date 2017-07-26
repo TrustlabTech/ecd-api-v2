@@ -97,6 +97,15 @@ export class ChildController {
     })
   }
 
+  static update = (req, res) => {
+    const uri = ChildController.v1StaffEndpoint,
+          options = REQUEST_OPTIONS(req, uri, 'PATCH', req.body)
+          
+    request(options, async (error, response, body) => {
+      res.status(response.statusCode).json(body)
+    })
+  }
+
   static getClass = (req, res) => {
     const uri = ChildController.v1ChildEndpoint + '/class/' + req.params.id,
           options = REQUEST_OPTIONS(req, uri, 'GET')
