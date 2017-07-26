@@ -17,7 +17,7 @@ child.post('/', (req, res) => {
   ChildController.create(req, res)
 })
 
-child.patch('/', (req, res) => {
+child.patch('/:id', (req, res) => {
   ChildController.update(req, res)
 })
 

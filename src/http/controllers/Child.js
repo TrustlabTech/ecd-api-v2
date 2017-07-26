@@ -98,7 +98,10 @@ export class ChildController {
   }
 
   static update = (req, res) => {
-    const uri = ChildController.v1StaffEndpoint,
+    if (!req.body.centre_class_id)
+      return res.status(400).json({ error: 'centre_class_id is required' })
+
+    const uri = ChildController.v1StaffEndpoint + `/${req.params.id}`,
           options = REQUEST_OPTIONS(req, uri, 'PATCH', req.body)
           
     request(options, async (error, response, body) => {
