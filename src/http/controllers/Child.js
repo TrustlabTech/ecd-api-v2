@@ -101,11 +101,14 @@ export class ChildController {
     if (!req.body.centre_class_id)
       return res.status(400).json({ error: 'centre_class_id is required' })
 
-    const uri = ChildController.v1StaffEndpoint + `/${req.params.id}`,
+    const uri = ChildController.v1ChildEndpoint + `/${req.params.id}`,
           options = REQUEST_OPTIONS(req, uri, 'PATCH', req.body)
           
     request(options, async (error, response, body) => {
-      res.status(response.statusCode).json(body)
+      if (!error)
+        return res.status(response.statusCode).json(body)
+      else
+        return res.status(500).json({ error: 'An error occurred: ' + error })
     })
   }
 
