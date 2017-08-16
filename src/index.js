@@ -26,7 +26,7 @@ const
 app.use(cors())
 app.use(bodyParser.json())
 //app.use(validator())
-app.use(jwt({ secret: process.env.JWT_SECRET }).unless({ path: '/staff/login' }))
+app.use(jwt({ secret: process.env.JWT_SECRET }).unless({ path: [{ url: '/staff/login', methods: ['POST'] }] }))
 
 // customize express-jwt error-handling
 // it replies HTML by default, but we wanna json here
