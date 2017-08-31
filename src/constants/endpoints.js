@@ -1,7 +1,7 @@
 'use-strict'
 
 const API_V1_SCHEMA = 'http://'
-export const API_V1_DOMAIN = 'staging.ecd.cnsnt.io'
+export const API_V1_DOMAIN = 'ecd.cnsnt.io'
 const API_V1_PREFIX = '/api/v1'
 export const API_V1_BASE = API_V1_SCHEMA + API_V1_DOMAIN + API_V1_PREFIX
 
