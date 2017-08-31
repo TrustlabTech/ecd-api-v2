@@ -20,8 +20,8 @@ export class StaffController {
           const centreInfo = await StorageProvider.getCentreModel().findOne({ id: body.user.centre.id }).select('did').exec()
           const staffInfo = await StorageProvider.getPractitionerModel().findOne({ id: body.user.id }).select('did').exec()
 
-          body.user.did = staffInfo.did
-          body.user.centre.did = centreInfo.did
+          body.user.did = staffInfo.did ? staffInfo.did : 'did:dummy'
+          body.user.centre.did = centreInfo.did ? centreInfo.did : 'did:dummy'
           
           res.status(response.statusCode).json(body)
         } catch (e) {
