@@ -37,4 +37,7 @@ child.get('/class/:id', (req, res) => {
   ChildController.getClass(req, res)
 })
 
+child.get('/center/:id', (req, res) => {
+    ChildController.getCenter(req, res)
+})
 export default child

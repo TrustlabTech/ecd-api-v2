@@ -125,4 +125,18 @@ export class ChildController {
       }
     })
   }
+
+    static getCenter = (req, res) => {
+        const uri = ChildController.v1ChildEndpoint + '/center/' + req.params.id,
+            options = REQUEST_OPTIONS(req, uri, 'GET')
+
+        request(options, (error, response, body) => {
+            if (!error) {
+                res.status(response.statusCode).json(body)
+            } else {
+                res.status(500).json({ error: 'An error occurred' })
+                console.log(error)
+            }
+        })
+    }
 }
