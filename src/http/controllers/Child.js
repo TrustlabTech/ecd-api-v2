@@ -126,8 +126,8 @@ export class ChildController {
     })
   }
 
-    static getCenter = (req, res) => {
-        const uri = ChildController.v1ChildEndpoint + '/center/' + req.params.id,
+    static getCentre = (req, res) => {
+        const uri = ChildController.v1ChildEndpoint + '/centre/' + req.params.id,
             options = REQUEST_OPTIONS(req, uri, 'GET')
 
         request(options, (error, response, body) => {
